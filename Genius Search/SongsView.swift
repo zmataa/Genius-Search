@@ -15,7 +15,7 @@ struct SongsView: View {
 
     var body: some View {
         List(songs) { song in
-            NavigationLink(destination: LyricsView(song: song)) {
+            NavigationLink(destination: SongLyricsView(song: song)) {
                 Text(song.title)
             }
         }
@@ -51,7 +51,7 @@ struct SongsView: View {
     }
 }
 
-// MARK: - Preview
+
 struct SongsView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
