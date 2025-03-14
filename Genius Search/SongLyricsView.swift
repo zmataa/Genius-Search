@@ -1,3 +1,11 @@
+
+
+//
+//  SongLyricsView.swift
+//  Genius Search
+//
+//  Created by Zane Matarieh on 3/3/25.
+//
 import SwiftUI
 
 struct SongLyricsView: View {
@@ -8,8 +16,12 @@ struct SongLyricsView: View {
         ScrollView {
             Text(lyrics)
                 .padding()
+                .foregroundColor(.yellow)
+                .background(Color.black)
         }
+        .background(Color.black)
         .navigationTitle(song.title)
+        .foregroundColor(.yellow)
         .task {
             await loadLyrics()
         }
@@ -28,12 +40,12 @@ struct SongLyricsView: View {
                     let subHTML = html[startRange.lowerBound...]
                     if let endRange = subHTML.range(of: "</div>") {
                         let snippet = subHTML[..<endRange.upperBound]
-                        
-                        // Remove HTML tags with a regular expression
+            
                         var plainText = snippet.replacingOccurrences(of: "<[^>]+>", with: "\n", options: .regularExpression)
                         plainText = plainText.replacingOccurrences(of: "&#x27;", with: "'")
                         plainText = plainText.replacingOccurrences(of: "\n+", with: "\n", options: .regularExpression)
                         plainText = plainText.replacingOccurrences(of: "&amp;", with: "&", options: .regularExpression)
+                        plainText = plainText.replacingOccurrences(of: "&quot;", with: "\"", options: .regularExpression)
 
                         DispatchQueue.main.async {
                             lyrics = plainText.trimmingCharacters(in: .whitespacesAndNewlines)

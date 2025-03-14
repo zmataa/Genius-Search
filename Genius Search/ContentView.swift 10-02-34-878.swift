@@ -4,6 +4,7 @@
 //  Created by Zane Matarieh on 3/3/25.
 //
 
+
 import SwiftUI
 import WebKit
 
@@ -18,24 +19,37 @@ struct ContentView: View {
                 TextField("Enter artist name", text: $query)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .padding()
+                    .background(Color.black)
+                    .foregroundColor(.yellow)
+                    .accentColor(.yellow)
                 
                 Button("Search") {
                     Task { await searchArtists() }
                 }
                 .padding()
-                
+                .background(Color.yellow)
+                .foregroundColor(.black)
+                .clipShape(RoundedRectangle(cornerRadius: 10))
                 
                 List(artists, id: \.id) { artist in
                     NavigationLink(destination: SongsView(artist: artist)) {
                         Text(artist.name)
+                            .foregroundColor(.yellow)
                     }
+                    .listRowBackground(Color.black)
                 }
+                .scrollContentBackground(.hidden)
+                .background(Color.black)
             }
+            .background(Color.black)
             .navigationTitle("Genius Artist Search")
+            .foregroundColor(.yellow)
             .alert(isPresented: $showingAlert) {
                 Alert(title: Text("Error"), message: Text("Failed to load data."), dismissButton: .default(Text("OK")))
             }
         }
+        .tint(.yellow)
+        .preferredColorScheme(.dark)
     }
     
     func searchArtists() async {
@@ -53,13 +67,17 @@ struct ContentView: View {
             let hits = searchResponse.response.hits
             let uniqueArtists = Set(hits.map { $0.result.primary_artist })
             let sortedArtists = uniqueArtists.sorted { $0.name < $1.name }
-            artists = sortedArtists
+            
+            DispatchQueue.main.async {
+                self.artists = sortedArtists
+            }
         } catch {
             DispatchQueue.main.async {
                 self.showingAlert = true
             }
         }
     }
+
 }
 
 struct GeniusSearchResponse: Codable {

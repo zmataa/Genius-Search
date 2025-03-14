@@ -17,15 +17,21 @@ struct SongsView: View {
         List(songs) { song in
             NavigationLink(destination: SongLyricsView(song: song)) {
                 Text(song.title)
+                    .foregroundColor(.yellow)
             }
+            .listRowBackground(Color.black)
         }
+        .scrollContentBackground(.hidden)
+        .background(Color.black)
         .navigationTitle("\(artist.name)'s Songs")
+        .foregroundColor(.yellow)
         .onAppear {
             Task { await fetchSongs() }
         }
         .alert(isPresented: $showingAlert) {
             Alert(title: Text("Error"), message: Text("Failed to load songs."), dismissButton: .default(Text("OK")))
         }
+        .tint(.yellow) // Changes NavigationLink text color
     }
 
     func fetchSongs() async {
@@ -50,7 +56,6 @@ struct SongsView: View {
         }
     }
 }
-
 
 struct SongsView_Previews: PreviewProvider {
     static var previews: some View {
